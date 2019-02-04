@@ -18,6 +18,29 @@ AddressBook.prototype.assignId = function() {
   return this.currentId;
 }
 
+AddressBook.prototype.findContact = function (id) {
+  for (var i = 0; i < this.contacts.length; i++) {
+    if (this.contacts[i]) {
+      if (this.contacts[i].id == id) {
+        return this.contacts[i];
+      }
+    }
+  };
+  return false;
+}
+
+AddressBook.prototype.deleteContact = function(id) {
+  for (var i=0; i < this.contacts.length; i++) {
+    if (this.contacts[i]) {
+      if (this.contacts[i].id == id) {
+        delete this.contacts[i];
+        return true;
+      }
+    }
+  };
+  return false;
+}
+
 
 // Business Logic for Contacts
 function Contact(firstName, lastName, phoneNumber) {
@@ -30,11 +53,11 @@ Contact.prototype.fullName = function() {
   return this.firstName + " " + this.lastName;
 }
 
-var addressBook = new AddressBook();
-var contact = new Contact("Ada", "Lovelace", "503-555-0100");
-var contact2 = new Contact("Grace", "Hopper", "503-555-0199");
-addressBook.addContact(contact);
-addressBook.addContact(contact2);
+//var addressBook = new AddressBook();
+//var contact = new Contact("Ada", "Lovelace", "503-555-0100");
+//var contact2 = new Contact("Grace", "Hopper", "503-555-0199");
+//addressBook.addContact(contact);
+//addressBook.addContact(contact2);
 
 // 1. Create an AddressBook object
 // 2. Create a new Contact object with a firstName of "Ada", under
@@ -46,4 +69,4 @@ addressBook.addContact(contact2);
 // 5. We add the second Contact object to the AddressBook using
 // the same new method
 
-addressBook.contacts;
+//addressBook.contacts;
