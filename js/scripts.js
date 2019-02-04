@@ -1,6 +1,7 @@
 // Business Logic for AddressBook
 function AddressBook() {
   this.contacts = []
+  this.currentId = 0
 }
 
 // This new method called addContact() takes a Contact object as
@@ -8,8 +9,15 @@ function AddressBook() {
 // this.contacts . Then, it uses push() to add the Contact provided
 // as an argument to the AddressBook's contacts array property
 AddressBook.prototype.addContact = function(contact) {
+  contact.id = this.assignId();
   this.contacts.push(contact);
 }
+
+AddressBook.prototype.assignId = function() {
+  this.currentId += 1;
+  return this.currentId;
+}
+
 
 // Business Logic for Contacts
 function Contact(firstName, lastName, phoneNumber) {
