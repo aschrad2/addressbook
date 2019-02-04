@@ -1,13 +1,9 @@
-// Business Logic for AddressBook
+// Business Logic for AddressBook ---------
 function AddressBook() {
-  this.contacts = []
+  this.contacts = [],
   this.currentId = 0
 }
 
-// This new method called addContact() takes a Contact object as
-// an argument. It locates AddressBook's contacts array by calling
-// this.contacts . Then, it uses push() to add the Contact provided
-// as an argument to the AddressBook's contacts array property
 AddressBook.prototype.addContact = function(contact) {
   contact.id = this.assignId();
   this.contacts.push(contact);
@@ -18,8 +14,8 @@ AddressBook.prototype.assignId = function() {
   return this.currentId;
 }
 
-AddressBook.prototype.findContact = function (id) {
-  for (var i = 0; i < this.contacts.length; i++) {
+AddressBook.prototype.findContact = function(id) {
+  for (var i=0; i< this.contacts.length; i++) {
     if (this.contacts[i]) {
       if (this.contacts[i].id == id) {
         return this.contacts[i];
@@ -30,7 +26,7 @@ AddressBook.prototype.findContact = function (id) {
 }
 
 AddressBook.prototype.deleteContact = function(id) {
-  for (var i=0; i < this.contacts.length; i++) {
+  for (var i=0; i< this.contacts.length; i++) {
     if (this.contacts[i]) {
       if (this.contacts[i].id == id) {
         delete this.contacts[i];
@@ -41,32 +37,65 @@ AddressBook.prototype.deleteContact = function(id) {
   return false;
 }
 
-
-// Business Logic for Contacts
+// Business Logic for Contacts ---------
 function Contact(firstName, lastName, phoneNumber) {
-  this.firstName = firstName;
-  this.lastName = lastName;
-  this.phoneNumber = phoneNumber;
+  this.firstName = firstName,
+  this.lastName = lastName,
+  this.phoneNumber = phoneNumber
 }
 
 Contact.prototype.fullName = function() {
   return this.firstName + " " + this.lastName;
 }
 
-//var addressBook = new AddressBook();
-//var contact = new Contact("Ada", "Lovelace", "503-555-0100");
-//var contact2 = new Contact("Grace", "Hopper", "503-555-0199");
-//addressBook.addContact(contact);
-//addressBook.addContact(contact2);
+// User Interface Logic ---------
+var addressBook = new AddressBook();
 
-// 1. Create an AddressBook object
-// 2. Create a new Contact object with a firstName of "Ada", under
-// variable name contact
-// 3. Create another new Contact object, this time with a firstName
-// "Grace", under the variable name contact2
-// 4. We add the first Contact object to our AddressBook, using
-// our new addContact() method
-// 5. We add the second Contact object to the AddressBook using
-// the same new method
+function displayContactDetails(addressBookToDisplay) {
+  var contactsList = $("ul#contacts");
+  var htmlForContactInfo = "";
+  addressBookToDisplay.contacts.forEach(function(contact) {
+    htmlForContactInfo += "<li id=" + contact.id + ">" + contact.firstName + " " + contact.lastName + "</li>";
+  });
+  contactsList.html(htmlForContactInfo);
+};
 
-//addressBook.contacts;
+function showContact(contactId) {
+  var contact = addressBook.findContact(contactId);
+  $("#show-contact").show();
+  $(".first-name").html(contact.firstName);
+  $(".last-name").html(contact.lastName);
+  $(".phone-number").html(contact.phoneNumber);
+  var buttons = $("#buttons");
+  buttons.empty();
+  buttons.append("<button class='deleteButton' id=" + + contact.id + ">Delete</button>");
+}
+
+function attachContactListeners() {
+  $("ul#contacts").on("click", "li", function() {
+    showContact(this.id);
+  });
+  $("#buttons").on("click", ".deleteButton", function() {
+    addressBook.deleteContact(this.id);
+    $("#show-contact").hide();
+    displayContactDetails(addressBook);
+  });
+};
+
+$(document).ready(function() {
+  attachContactListeners();
+  $("form#new-contact").submit(function(event) {
+    event.preventDefault();
+    var inputtedFirstName = $("input#new-first-name").val();
+    var inputtedLastName = $("input#new-last-name").val();
+    var inputtedPhoneNumber = $("input#new-phone-number").val();
+
+    $("input#new-first-name").val("");
+    $("input#new-last-name").val("");
+    $("input#new-phone-number").val("");
+
+    var newContact = new Contact(inputtedFirstName, inputtedLastName, inputtedPhoneNumber);
+    addressBook.addContact(newContact);
+    displayContactDetails(addressBook);
+  })
+})
